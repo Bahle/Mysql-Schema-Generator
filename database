@@ -1,0 +1,23 @@
+{
+	database: 'test_database'
+	tables: [{
+		name: 'User',
+		fields: ['name', 'email', 'password'],
+		props: ['controller', 'dashboard-route', 'app-model', 'app-controller']
+		foriegnKeys: [
+			{
+				name: 'Company',
+				delete: 'cascade',
+				update: 'cascade'
+			}
+		]
+	},
+	{
+		name: 'Post',
+		fields: ['message', 'media']
+	},
+	{
+		name: 'Company',
+		fields: ['name', 'email', 'tel']
+	}]
+}

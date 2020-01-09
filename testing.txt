@@ -1,0 +1,28 @@
+$mydatabase
+user
+- name s80
+- email text
+- password c20
+@controller
+@dashboard-route
+@app-model
+@app-controller
+#(name: company i, delete: cascade, update: cascade)
+
+post
+- message text
+- media s255
+
+company
+- name s80
+- email s512
+- tel s40
+
+product
+- name time
+- price d8,6 n
+- picture s255
+- item_count i
+@controller
+@app-model
+@app-controller

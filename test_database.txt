@@ -1,0 +1,53 @@
+$test_database
+
+user
+- name s80
+- email text
+- password c20
+@controller
+@dashboard-route
+@app-model
+@app-controller
+#foreign(name: company, delete: cascade, update: cascade) <- should run these at end of tables creation
+
+post
+- message
+- media
+
+company
+- name
+- email
+- tel
+
+product
+- name time
+- price d8,6 n
+- picture s255
+- item_count i
+@controller
+@app-model
+@app-controller
+
+string: s10
+text
+timestamp: time
+int: i
+double
+float: f10,3
+decimal: d6,4
+boolean: b
+enum: e(Apple, Banana)
+
+CREATE TABLE `leselihub`.`test` ( `id` INT NOT NULL AUTO_INCREMENT , `adf` VARCHAR(80) NOT NULL , `fdgdfg` DATE NOT NULL , `dfgsdfo` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+street fighter alpha 123
+
+unity
+opportunities for everyone
+
+check enum
+
+ (maximum email length?)
+
+!modify when values.length > 2
+!need to test crud

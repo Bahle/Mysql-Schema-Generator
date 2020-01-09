@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS mydatabase; 
+USE mydatabase;
+
+CREATE TABLE IF NOT EXISTS user (
+	user_id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR (80) NOT NULL,
+	email TEXT NOT NULL,
+	password CHAR (20) NOT NULL,
+	PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS post (
+	post_id INT NOT NULL AUTO_INCREMENT,
+	message TEXT NOT NULL,
+	media VARCHAR (255) NOT NULL,
+	PRIMARY KEY (post_id)
+);
+
+CREATE TABLE IF NOT EXISTS company (
+	company_id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR (80) NOT NULL,
+	email VARCHAR (512) NOT NULL,
+	tel VARCHAR (40) NOT NULL,
+	PRIMARY KEY (company_id)
+);
+
+CREATE TABLE IF NOT EXISTS product (
+	product_id INT NOT NULL AUTO_INCREMENT,
+	name TIMESTAMP NOT NULL,
+	price DECIMAL(8,6) NULL,
+	picture VARCHAR (255) NOT NULL,
+	item_count INTEGER NOT NULL,
+	PRIMARY KEY (product_id)
+);
+
+ALTER TABLE user ADD company INTEGER NOT NULL AFTER user_id, ADD INDEX (company);
+				ALTER TABLE user 
+				ADD CONSTRAINT fk_user_company
+				FOREIGN KEY (company)
+				REFERENCES company (company_id)
+				ON DELETE CASCADE
+				ON UPDATE CASCADE;
+			
