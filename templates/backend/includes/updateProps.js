@@ -1,0 +1,1 @@
+export default 'contact_id,full_name,country_code,tel'

@@ -4,9 +4,9 @@ user
 - email text
 - password c20
 @controller
-@dashboard-route
-@app-model
-@app-controller
+$dashboard-route
+&app-model
+%app-controller
 #(name: company i, delete: cascade, update: cascade)
 
 post

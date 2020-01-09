@@ -1,6 +1,6 @@
 const http = require('http');
 const lineReader = require('line-reader');
-const fs = require('fs')
+const fs = require('fs-extra')
 const { fileReader, fileWriter } = require('./testo.js');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -29,9 +29,15 @@ function processFile(line) {
 		return;
 	}
 
-	// table integration
+	// table backend controller
 	if(line[0] == '@') {
-		tables.length > 0 && tables[tables.length-1].props.push(line.slice(1, line.length).trim());
+		tables.length > 0 && tables[tables.length-1].controller.push(line.slice(1, line.length).trim());
+		return;
+	}
+
+	// table dashboard route
+	if(line[0] == '$') {
+		tables.length > 0 && tables[tables.length-1].dashboard.push(line.slice(1, line.length).trim());
 		return;
 	}
 
@@ -44,9 +50,10 @@ function processFile(line) {
 	// create table
 	tables.push({
 		name: line.trim(),
-		fields: [],
-		props: [],
-		foriegnKeys: []
+		fields: [], //-
+		controller: '', //@
+		dashboard: '', //$
+		foriegnKeys: [] //#
 	});
 }
 
@@ -99,6 +106,19 @@ function genSql() {
 		
 	})
 
+	// implementation for generation of backend routes
+	// if a single table is found to have a controller
+	if(tables.find(table => table.controller != '').length > 0) {
+		// begin by Cloning the Backend Template Folder
+		fs.copy('../backend-template', './server')
+		  .then(() => console.log('success!'))
+		  .catch(err => console.error(err))
+	}
+
+	tables.forEach(table => {
+
+	});
+
 	return sql;
 }
 
@@ -112,6 +132,8 @@ function fieldType(type) {
 	if(type == 'i') return 'INTEGER';
 	if(type == 'b')	return 'BOOLEAN';
 	if(type == 'time') return 'TIMESTAMP';
+	if(type == 'date') return 'DATE';
+	if(type == 'dt') return 'DATETIME';
 
 	if(/c\d+/.test(type) === true) {
 		let count = type.match(/\d+/);
