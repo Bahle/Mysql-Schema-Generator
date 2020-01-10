@@ -4,6 +4,7 @@ const fs = require('fs-extra')
 const { fileReader, fileWriter } = require('./testo.js');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const prependFile = require('prepend-file');
 
 fileReader('testing.txt', processFile, async () => {
 	fileWriter('schema.sql', genSql());
@@ -110,16 +111,138 @@ function genSql() {
 	// if a single table is found to have a controller
 	if(tables.find(table => table.controller != '').length > 0) {
 		// begin by Cloning the Backend Template Folder
-		fs.copy('../backend-template', './server')
-		  .then(() => console.log('success!'))
-		  .catch(err => console.error(err))
+		const folder = `./${database}/server`;
+		fs.copySync('../backend-template', folder)
+
+		tables.filter(table => table.controller != '').forEach(table => {
+			// then 
+			fs.copySync('./templates/backend/route.js', folder + '/routes/' + table.name); // create the route file
+
+			fs.ensureDirSync(folder + '/routes/' + table.name); // create props folder
+			fileWriter(folder + '/routes/' + table.name + '/createProps.js', 'export default "' + table.fields + '"')
+			fileWriter(folder + '/routes/' + table.name + '/udpateProps.js', 'export default "' + table.fields + '"')
+		});
 	}
 
-	tables.forEach(table => {
+	// implementation for generation of dashboard pages
+	// if a single table is found to have a controller
+	if(tables.find(table => table.dashboard != '').length > 0) {
+		// begin by Cloning the Dashboard Template Folder
+		const folder = `./${database}/server/client`;
+		fs.copySync('../dashboard-template', folder)
 
-	});
+		tables.filter(table => table.dashboard != '').forEach(table => {
+			let path = folder + '/src/pages/' + table.name;
+			// fs.ensureDirSync(path); // create props folder
+			fs.ensureDirSync(path + '/includes'); // create both page and includes folder
+
+			// then 
+			fs.copySync('./templates/dashboard/List.js', path + '/List.js');
+			fs.copySync('./templates/dashboard/Edit.js', path + '/Edit.js');
+			fs.copySync('./templates/dashboard/Details.js', path + '/Details.js');
+			fs.copySync('./templates/dashboard/New.js', path + '/New.js');
+
+			let fieldProps1 = table.fields[0].split(' ');
+			let fieldProps2 = table.fields[1].split(' ');
+			
+			// List Page
+			fs.writeJsonSync(path + '/includes/List.js', {
+				 Path: '/',
+				 Title: table.name,
+				 Table: table.name,
+				 Columns: [
+					{
+						title: fieldProps1,
+						dataIndex: fieldProps1.toLowerCase(),
+						key: fieldProps1.toLowerCase()
+					},
+					{
+						title: fieldProps2,
+						dataIndex: fieldProps2.toLowerCase(),
+						key: fieldProps2.toLowerCase()
+					}
+				]
+			});
+
+			let columns = []
+			table.fields.forEach(field => {
+				let fieldProps = field.split(' '),
+					name = fieldProps[0],
+					type = fieldType(fieldProps[1]),
+					nullable = fieldProps.length <= 2 ? 'NOT NULL' : 'NULL';
+
+				columns.push({
+					name: name,
+					type: inferType(name, type),
+					rules: inferRules(name, nullable)
+				})
+			})
+
+			/*string s, integer i, boolean b, tel (phone, tel), text, select, 
+			password (password), table, tabs, date, reset_password*/
+
+			// Edit Page
+			fs.writeJsonSync(path + '/includes/Edit.js', {
+				Title: `Edit ${table.name.toUpperCaseFirst()}`,
+				Table: table.name,
+				Fields: columns
+			});
+
+			fs.writeJsonSync(path + '/includes/Details.js', {
+			 	Title: `${table.name.toUpperCaseFirst()} details`,
+			 	Table: table.name,
+			 	Columns: table.fields
+			})
+
+			fs.writeJsonSync(path + '/includes/New.js', {
+				Title: `New ${table.name.toUpperCaseFirst()}`,
+				Table: table.name,
+				Fields: columns
+			})
+
+			prependFile.sync(path + '/includes/List.js', 'export default ');
+			prependFile.sync(path + '/includes/Edit.js', 'export default ');
+			prependFile.sync(path + '/includes/Details.js', 'export default ');
+			prependFile.sync(path + '/includes/New.js', 'export default ');
+		});
+	}
 
 	return sql;
+}
+
+function inferType(name, type) {
+	if(name.indexOf('phone') != -1 || name.indexOf('tel') != -1) return 'tel';
+	if(name.indexOf('password') != -1) return 'password';
+	
+	switch(type) {
+		case 's': return 'string';
+		case 'i': return 'integer';
+		case 'b': return 'boolean';
+		case 'date': return 'date';
+		case 'time': return 'date';
+		case 'c': return 'string';
+		case 'f': return 'integer';
+		case 'd': return 'integer';
+		case 'e': return 'select';
+		case 'text': return 'text';
+		default: return 'string';
+	}
+}
+
+// could be a couple of ternary operators
+function inferRules(name, nullable) {
+	const results = {
+		required: nullable == 'NOT NULL',
+		message: `Please input ${name}`
+	};
+
+	if(name == 'email') results.email = true;
+
+	return results;
+}
+
+String.prototype.toUpperCaseFirst = function upperCaseFirst() {
+	return this[0].toUpperCase() + this.slice(1);
 }
 
 function fieldType(type) {
