@@ -3,8 +3,8 @@ const pool = require('../connection');
 const table = require('path').basename(__filename, '.js');
 const { viewRecords, insertRecords, updateRecords, removeRecords } = require('../functions/crud.js');
 
-const createProps = require('./includes/create.js')
-const updateProps = require('./includes/update.js')
+const createProps = require(`./${table}/createProps.js`)
+const updateProps = require(`./${table}/updateProps.js`)
 
 async function get(req, res) {
 	res.json(await viewRecords(table, req));

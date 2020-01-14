@@ -6,8 +6,9 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const prependFile = require('prepend-file');
 
-fileReader('testing.txt', processFile, async () => {
+fileReader('lh.txt', processFile, async () => {
 	fileWriter('schema.sql', genSql());
+	// genSql();
 	console.log('Finished writing schema!')
 	console.log('Importing database from schema...')
 	await exec('mysql -u root -p < schema.sql');
@@ -37,7 +38,7 @@ function processFile(line) {
 	}
 
 	// table dashboard route
-	if(line[0] == '$') {
+	if(line[0] == '%') {
 		tables.length > 0 && tables[tables.length-1].dashboard.push(line.slice(1, line.length).trim());
 		return;
 	}
@@ -52,8 +53,8 @@ function processFile(line) {
 	tables.push({
 		name: line.trim(),
 		fields: [], //-
-		controller: '', //@
-		dashboard: '', //$
+		controller: [], //@
+		dashboard: [], //$
 		foriegnKeys: [] //#
 	});
 }
@@ -109,27 +110,36 @@ function genSql() {
 
 	// implementation for generation of backend routes
 	// if a single table is found to have a controller
-	if(tables.find(table => table.controller != '').length > 0) {
+	/* *** if(tables.filter(table => table.controller != '').length > 0) {
 		// begin by Cloning the Backend Template Folder
-		const folder = `./${database}/server`;
+		const folder = `./generated/${database}/server`;
+		// console.log('folder is ' + folder)
+		console.log('copying folder ' + folder + '...')
 		fs.copySync('../backend-template', folder)
+		console.log('Finished copying folder!')
 
 		tables.filter(table => table.controller != '').forEach(table => {
+			console.log('found controller: ' + table.controller)
 			// then 
-			fs.copySync('./templates/backend/route.js', folder + '/routes/' + table.name); // create the route file
+			fs.copySync('./templates/backend/route.js', folder + '/routes/' + table.name + '.js'); // create the route file
+
+			console.log(table.fields)
+			const fields = table.fields.map(field => field.split(' ')[0]);
 
 			fs.ensureDirSync(folder + '/routes/' + table.name); // create props folder
-			fileWriter(folder + '/routes/' + table.name + '/createProps.js', 'export default "' + table.fields + '"')
-			fileWriter(folder + '/routes/' + table.name + '/udpateProps.js', 'export default "' + table.fields + '"')
+			fileWriter(folder + '/routes/' + table.name + '/createProps.js', 'export default "' + fields + '"')
+			fileWriter(folder + '/routes/' + table.name + '/udpateProps.js', 'export default "' + fields + '"')
 		});
-	}
+	} *** */
 
 	// implementation for generation of dashboard pages
 	// if a single table is found to have a controller
-	if(tables.find(table => table.dashboard != '').length > 0) {
+	/* *** if(tables.filter(table => table.dashboard != '').length > 0) {
 		// begin by Cloning the Dashboard Template Folder
-		const folder = `./${database}/server/client`;
+		const folder = `./generated/${database}/server/client`;
+		console.log('Copying folder...');
 		fs.copySync('../dashboard-template', folder)
+		console.log('Finished copying folder!');
 
 		tables.filter(table => table.dashboard != '').forEach(table => {
 			let path = folder + '/src/pages/' + table.name;
@@ -152,14 +162,14 @@ function genSql() {
 				 Table: table.name,
 				 Columns: [
 					{
-						title: fieldProps1,
-						dataIndex: fieldProps1.toLowerCase(),
-						key: fieldProps1.toLowerCase()
+						title: fieldProps1[0],
+						dataIndex: fieldProps1[0].toLowerCase(),
+						key: fieldProps1[0].toLowerCase()
 					},
 					{
-						title: fieldProps2,
-						dataIndex: fieldProps2.toLowerCase(),
-						key: fieldProps2.toLowerCase()
+						title: fieldProps2[0],
+						dataIndex: fieldProps2[0].toLowerCase(),
+						key: fieldProps2[0].toLowerCase()
 					}
 				]
 			});
@@ -177,9 +187,6 @@ function genSql() {
 					rules: inferRules(name, nullable)
 				})
 			})
-
-			/*string s, integer i, boolean b, tel (phone, tel), text, select, 
-			password (password), table, tabs, date, reset_password*/
 
 			// Edit Page
 			fs.writeJsonSync(path + '/includes/Edit.js', {
@@ -205,7 +212,7 @@ function genSql() {
 			prependFile.sync(path + '/includes/Details.js', 'export default ');
 			prependFile.sync(path + '/includes/New.js', 'export default ');
 		});
-	}
+	} *** */
 
 	return sql;
 }

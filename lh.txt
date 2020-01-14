@@ -1,0 +1,86 @@
+$leselihub
+tenders
+- title s80
+- description text
+- cover_image s512
+- tags s512
+- created_at time
+@controller
+%dashboard-route
+#(name: author i, delete: restrict, update: cascade)
+
+vacancies
+- title s80
+- description text
+- cover_image s512
+- tags s512
+- created_at time
+@controller
+%dashboard-route
+#(name: author i, delete: restrict, update: cascade)
+
+interviews
+- title s80
+- description text
+- cover_image s512
+- cover_video s512
+- tags s512
+- created_at time
+@controller (crud)
+%dashboard-route (crud)
+#(name: author i, delete: restrict, update: cascade)
+
+press_release
+- title s80
+- description text
+- cover_image s512
+- tags s512
+- created_at time
+@controller (crud)
+%dashboard-route (crud)
+#(name: author i, delete: restrict, update: cascade)
+
+directory
+- name s100
+- description text
+- email s512
+- phone s200
+- website s512
+- logo s512
+- tags s512
+- address text
+- created_at time
+- updated_at time
+@controller (crud)
+%dashboard-route (crud)
+
+author
+- name s80
+- surname s80
+- email s255
+- password s80
+- picture s512
+- about text
+- created_at time
+@controller (crud)
+%dashboard-route (crud)
+
+ad
+- company s100
+- image s512
+- post_type s50
+- created_at time
+@controller (crd)
+%dashboard-route (crd)
+
+ad_period
+- duration_from date
+- duration_to date
+- price d8,6
+#(name: ad i, delete: restrict, update: cascade)
+
+admin
+- name s80
+- surname s80
+- email s255
+- password s80
