@@ -6,12 +6,13 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const prependFile = require('prepend-file');
 
+// start here supposedly
 fileReader('lh.txt', processFile, async () => {
-	fileWriter('schema.sql', genSql());
+	fileWriter('jola.sql', genSql());
 	// genSql();
 	console.log('Finished writing schema!')
 	console.log('Importing database from schema...')
-	await exec('mysql -u root -p < schema.sql');
+	await exec('mysql -u root -p < jola.sql');
 	console.log('Finished importing schema!')
 });
 
@@ -69,7 +70,7 @@ function genSql() {
 		table.fields.forEach(field => {
 			let fieldProps = field.split(' '),
 				type = fieldType(fieldProps[1]),
-				nullable = fieldProps.length <= 2 ? 'NOT NULL' : 'NULL';
+				nullable = fieldProps[fieldProps.length-1] == 'n' ? 'NULL' : 'NOT NULL'; //fieldProps.length <= 2 ? 'NOT NULL' : 'NULL';
 
 			fieldStr += `\t${fieldProps[0]} ${type} ${nullable},\n`;
 		});
@@ -217,6 +218,7 @@ function genSql() {
 	return sql;
 }
 
+// for dashboard page generation
 function inferType(name, type) {
 	if(name.indexOf('phone') != -1 || name.indexOf('tel') != -1) return 'tel';
 	if(name.indexOf('password') != -1) return 'password';
@@ -259,11 +261,14 @@ function fieldType(type) {
 		return `VARCHAR (${count})`;
 	}
 
-	if(type == 'i') return 'INTEGER';
+	if(type == 'i') return 'INT'; // was integer
+	if(type == 'ti') return 'TINYINT';
+	if(type == 'si') return 'SMALLINT';
 	if(type == 'b')	return 'BOOLEAN';
 	if(type == 'time') return 'TIMESTAMP';
 	if(type == 'date') return 'DATE';
 	if(type == 'dt') return 'DATETIME';
+	if(type == 't') return 'TEXT';
 
 	if(/c\d+/.test(type) === true) {
 		let count = type.match(/\d+/);
@@ -273,17 +278,25 @@ function fieldType(type) {
 
 	if(/f\d+,\d+/.test(type)) {
 		// let values = type.match(/\d+/g); // extract number values
-		return `FLOAT(${type.slice(1, type.length)})`;
+		return `FLOAT(${type.slice(1/*, type.length*/)})`;
 	}
 
 	if(/d\d+,\d+/.test(type)) {
 		// let values = type.match(/\d+/g); // extract number values
-		return `DECIMAL(${type.slice(1, type.length)})`;
+		return `DECIMAL(${type.slice(1, /*type.length*/)})`;
 	}
 
-	if(type == 'e')  {
-		return `ENUM(${type.slice(1, type.length)})`;
+	if(type[0] == 'e')  {
+		return `ENUM(${type.slice(2, /*type.length*/).replace(/_/g, ' ').replace(/([a-zA-Z0-9-\s]+)/g, "'$1'")}`;
 	}
+
+	if(type.slice(0,3) == 'set')  {
+		return `SET(${type.slice(4, /*type.length*/).replace(/_/g, ' ').replace(/([a-zA-Z0-9-\s]+)/g, "'$1'")}`;
+	}
+
+	console.log('Got a weird one: ', type)
+
+	process.exit();
 
 	return type.toUpperCase();
 }

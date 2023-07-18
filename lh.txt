@@ -1,86 +1,87 @@
 $leselihub
-tenders
-- title s80
-- description text
-- cover_image s512
-- tags s512
-- created_at time
-@controller
-%dashboard-route
-#(name: author i, delete: restrict, update: cascade)
 
-vacancies
-- title s80
-- description text
-- cover_image s512
-- tags s512
-- created_at time
-@controller
-%dashboard-route
-#(name: author i, delete: restrict, update: cascade)
+shareholder
+- surname s80
+- firstname s80
+- gender set(MALE,FEMALE)
+- id_no s30
+- ls_citizen b
+- country_of_origin set(LESOTHO,OTHER)
+- disabled b
+- unemployed b
+- living_in_rural_areas b
+- youth b
 
-interviews
-- title s80
-- description text
-- cover_image s512
-- cover_video s512
-- tags s512
-- created_at time
-@controller (crud)
-%dashboard-route (crud)
-#(name: author i, delete: restrict, update: cascade)
-
-press_release
-- title s80
-- description text
-- cover_image s512
-- tags s512
-- created_at time
-@controller (crud)
-%dashboard-route (crud)
-#(name: author i, delete: restrict, update: cascade)
-
-directory
-- name s100
-- description text
+contact_details
 - email s512
-- phone s200
-- website s512
-- logo s512
-- tags s512
-- address text
-- created_at time
-- updated_at time
-@controller (crud)
-%dashboard-route (crud)
+- cell_no s40
+- work_no s40
+- home_no s40
+- residential_address t
+- city s255
+- postal_address s100
+#(name: shareholder i, delete: restrict, update: cascade)
 
-author
+company_details
+- name_of_entity s255
+- registration_number s150
+- physical_address t
+- tel_no s40
+- email s512
+#(name: shareholder i, delete: restrict, update: cascade)
+
+representative
 - name s80
 - surname s80
-- email s255
-- password s80
-- picture s512
-- about text
-- created_at time
-@controller (crud)
-%dashboard-route (crud)
+- id_number s40
+- physical_address t
+- postal_address s100
+- tel_no s40
+- email s512
+#(name: shareholder i, delete: restrict, update: cascade)
 
-ad
-- company s100
-- image s512
-- post_type s50
-- created_at time
-@controller (crd)
-%dashboard-route (crd)
+parent_details
+- capacity set(BIRTH_PARENT_OF_MINOR,LEGAL_GUARDIAN)
+- surname s40
+- firstname s40
+- id_no s40
+- cell_no s40
+- work_no s40
+- home_no s40
+- email s512
+- residential_address t
+- city s100
+- postal_code s100
+#(name: shareholder i, delete: restrict, update: cascade)
 
-ad_period
-- duration_from date
-- duration_to date
-- price d8,6
-#(name: ad i, delete: restrict, update: cascade)
+bank_details
+- bank_name s150
+- account_no s50
+- branch_code s50
+- account_type set(CHEQUE_ACCOUNT,SAVINGS,BUSINESS)
+#(name: shareholder i, delete: restrict, update: cascade)
 
-admin
-- name s80
-- surname s80
-- email s255
-- password s80
+signature
+- place s150
+#(name: shareholder i, delete: restrict, update: cascade)
+#(name: consent i, delete: restrict, update: cascade)
+
+shares
+- total i
+- event e(CREATED,ISSUED)
+- type e(ORDINARY,PREFERENCE,NON-VOTING_ORDINARY,REDEEMABLE,CUMULATIVE_PREFERENCE,REDEEMABLE_PREFERENCE)
+
+share_price
+- type e(ORDINARY,PREFERENCE,NON-VOTING_ORDINARY,REDEEMABLE,CUMULATIVE_PREFERENCE,REDEEMABLE_PREFERENCE)
+- amount i
+- date dt
+
+share_purchase
+- amount i
+- proof_of_payment s65535 n
+#(name: shareholder i, delete: restrict, update: cascade)
+#(name: share_price i, delete: restrict, update: cascade)
+
+
+consent
+- content s300
