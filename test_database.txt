@@ -38,6 +38,12 @@ decimal: d6,4
 boolean: b
 enum: e(Apple, Banana)
 
+n for null
+
+#foreign(name: company, delete: cascade, update: cascade)
+
+No need to include id's, automatically created
+
 CREATE TABLE `leselihub`.`test` ( `id` INT NOT NULL AUTO_INCREMENT , `adf` VARCHAR(80) NOT NULL , `fdgdfg` DATE NOT NULL , `dfgsdfo` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
 street fighter alpha 123
