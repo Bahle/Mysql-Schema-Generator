@@ -1,14 +1,14 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js start
+  D:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js start
 
 PATH: 
-  C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Yarn\bin\;C:\xampp\php;D:\Program Files\Git\cmd;C:\Program Files (x86)\Fuse\;C:\ProgramData\ComposerSetup\bin;C:\Program Files (x86)\GtkSharp\2.12\bin;D:\Users\Azar\Anaconda3\Scripts;C:\curl-7.65.1-win64-mingw\bin;D:\users\azar\anaconda3;C:\ProgramData\chocolatey\bin;D:\flutter\bin;C:\Program Files\Java\jdk1.8.0_162\bin;C:\Program Files\nodejs;C:\xampp\mysql\bin;C:\Users\Azar\AppData\Local\Programs\Python\Python37-32\Scripts\;C:\Users\Azar\AppData\Local\Yarn\bin;C:\Program Files\Heroku\bin;C:\Users\Azar\AppData\Roaming\Composer\vendor\bin;C:\Users\Azar\AppData\Local\hyper\app-3.0.0\resources\bin;D:\Users\Azar\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Azar\AppData\Roaming\npm
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Yarn\bin\;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files (x86)\GtkSharp\2.12\bin;D:\Users\Azar\Anaconda3\Scripts;C:\curl-7.65.1-win64-mingw\bin;D:\users\azar\anaconda3;C:\ProgramData\chocolatey\bin;D:\flutter\bin;D:\Program Files\Java\jdk-11.0.17\bin;C:\xampp\mysql\bin;D:\doctl-1.37.0-windows-amd64;C:\Users\Azar\AppData\Roaming\nvm;C:\Program Files\nodejs;D:\android-sdk-windows\platform-tools;D:\Program Files\Git\cmd;D:\curl-7.79.1-win64-mingw\bin;D:\Program Files\GitHub CLI\;D:\Program Files\nodejs\;D:\Program Files\PuTTY\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\strawberry\c\bin;C:\strawberry\perl\bin;D:\Users\Azar\AppData\Local\Programs\Python\Python311\Scripts\;D:\Users\Azar\AppData\Local\Programs\Python\Python311\;C:\Users\Azar\AppData\Local\Programs\Python\Python37-32\Scripts\;C:\Users\Azar\AppData\Local\Yarn\bin;C:\Program Files\Heroku\bin;C:\Users\Azar\AppData\Roaming\Composer\vendor\bin;C:\Users\Azar\AppData\Local\hyper\app-3.0.0\resources\bin;D:\Users\Azar\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Azar\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Azar\AppData\Roaming\npm;D:\Users\Azar\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\Azar\AppData\Local\Microsoft\WindowsApps;C:\Users\Azar\.dotnet\tools;C:\Users\Azar\AppData\Local\Programs\Filestar;C:\Users\Azar\AppData\Roaming\Filestar\aliases;
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  10.16.3
+  16.14.2
 
 Platform: 
   win32 x64
@@ -20,7 +20,8 @@ npm manifest:
     "description": "",
     "main": "index.js",
     "scripts": {
-      "start": "nodemon index.js --ignore client/ generated/ -e html,js,css"
+      "dev": "nodemon index.js --ignore client/ --ignore generated/ -e html,js,css",
+      "start": "node index.js"
     },
     "author": "",
     "license": "ISC",
@@ -42,15 +43,15 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 3221225786
-  Command: C:\Windows\system32\cmd.exe
-  Arguments: /d /s /c nodemon index.js --ignore client/ generated/ -e html,js,css
+  Exit code: 1
+  Command: C:\WINDOWS\system32\cmd.exe
+  Arguments: /d /s /c node index.js
   Directory: C:\Users\Azar\Projects\Node\Automata
   Output:
   
       at ProcessTermError.MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
       at new ProcessTermError (C:\Program Files (x86)\Yarn\lib\cli.js:226:113)
       at ChildProcess.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:30281:17)
-      at ChildProcess.emit (events.js:198:13)
-      at maybeClose (internal/child_process.js:982:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:259:5)
+      at ChildProcess.emit (node:events:526:28)
+      at maybeClose (node:internal/child_process:1092:16)
+      at Process.ChildProcess._handle.onexit (node:internal/child_process:302:5)
