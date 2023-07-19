@@ -12,7 +12,7 @@ fileReader('lh.txt', processFile, async () => {
 	// genSql();
 	console.log('Finished writing schema!')
 	console.log('Importing database from schema...')
-	await exec('mysql -u root -p < jola.sql');
+	// await exec('mysql -u root -p < jola.sql');
 	console.log('Finished importing schema!')
 });
 
