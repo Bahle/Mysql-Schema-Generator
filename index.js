@@ -6,14 +6,35 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const prependFile = require('prepend-file');
 
-// start here supposedly
-fileReader('lh.txt', processFile, async () => {
-	fileWriter('jola.sql', genSql());
-	// genSql();
-	console.log('Finished writing schema!')
-	console.log('Importing database from schema...')
-	// await exec('mysql -u root -p < jola.sql');
-	console.log('Finished importing schema!')
+// Create a readline interface for reading user input
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+// Welcome message and prompts for input/output file names
+console.log('Welcome to the Mysql Schema Generation Utility!');
+rl.question('Enter the input file name: ', (sourceFile) => {
+  rl.question('Enter the output file name: ', (destinationFile) => {
+  	rl.question('Do you want the schema to be imported directly into your mysql databases? (y/n): ', (answer) => {
+	    // start here supposedly
+	    fileReader(sourceFile, processFile, async () => {
+	    	fileWriter(`${destinationFile}.sql`, genSql());
+	    	// genSql();
+	    	const import = answer.toLowerCase() === 'y';
+
+	    	if(import) {
+		    	console.log('Finished writing schema!');
+		    	console.log('Importing database from schema...');
+	    		await exec(`mysql -u root -p < ${destinationFile}.sql`);
+	    		console.log('Finished importing schema!');
+	    	}
+	    });
+
+	    copyFile(sourceFile, destinationFile);
+	    rl.close();
+	});
+  });
 });
 
 let database,
